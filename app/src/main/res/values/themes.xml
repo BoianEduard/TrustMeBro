@@ -1,9 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.IntentsTest" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.TrustMeBro" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.IntentsTest" parent="Base.Theme.IntentsTest" />
+    <style name="Theme.TrustMeBro" parent="Base.Theme.TrustMeBro" />
 </resources>

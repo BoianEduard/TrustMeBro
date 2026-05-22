@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.intentstest"
+    namespace = "com.example.trustmebro"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.intentstest"
+        applicationId = "com.example.trustmebro"
         minSdk = 31
         targetSdk = 36
         versionCode = 1

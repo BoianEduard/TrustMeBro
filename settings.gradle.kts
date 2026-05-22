@@ -22,6 +22,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "IntentsTest"
+rootProject.name = "TrustMeBro"
 include(":app")
- 
