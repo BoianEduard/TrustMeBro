@@ -2,11 +2,11 @@
 
 # Architecture diagram
 
-![Architecture Diagram](architecture_diagram.png)
+![Architecture Diagram](docs/architecture_diagram.png)
 
 # Flow diagram
 
-![Flow Diagram](flow_diagram.png)
+![Flow Diagram](docs/flow_diagram.png)
 
 # Implementation plan
 
