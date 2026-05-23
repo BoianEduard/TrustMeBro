@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(libs.localbroadcastmanager)
     testImplementation(libs.junit)
     testImplementation("io.appium:java-client:10.1.1")
     androidTestImplementation(libs.ext.junit)
