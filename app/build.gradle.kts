@@ -1,3 +1,5 @@
+import io.gitlab.arturbosch.detekt.Detekt
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.detekt)
@@ -32,10 +34,11 @@ android {
     }
 
     lint {
-        abortOnError = false
+        abortOnError = true
         checkDependencies = true
         ignoreWarnings = false
         quiet = true
+        sarifReport = true
     }
 }
 
@@ -43,6 +46,13 @@ detekt {
     toolVersion = libs.versions.detekt.get()
     config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
     buildUponDefaultConfig = true
+}
+
+tasks.withType<Detekt>().configureEach {
+    reports {
+        sarif.required.set(true)
+        sarif.outputLocation.set(file("build/reports/detekt.sarif"))
+    }
 }
 
 dependencies {
