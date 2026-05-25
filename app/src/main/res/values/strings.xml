@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">TrustMeBro</string>
+    <string name="app_subtitle">Vulnerable Android Application - 6 Attack Vectors</string>
+    <string name="step1_title">Step 1: Backup Configuration Leak</string>
+    <string name="step2_title">Step 2: Cryptographic Key Harvesting</string>
+    <string name="step3_title">Step 3: System IPC Escalation</string>
+    <string name="step4_title">Step 4: Database Leak &amp; SQL Injection</string>
+    <string name="step5_title">Step 5: WebView Local File Hijacking</string>
+    <string name="step6_title">Step 6: Compositor Overlay Capture</string>
 </resources>

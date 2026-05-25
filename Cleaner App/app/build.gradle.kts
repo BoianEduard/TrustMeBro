@@ -1,17 +1,18 @@
-import io.gitlab.arturbosch.detekt.Detekt
-
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.detekt)
 }
 
 android {
-    namespace = "com.example.trustmebro"
-    compileSdk = 36
+    namespace = "com.example.cleanerapp"
+    compileSdk {
+        version = release(36) {
+            minorApiLevel = 1
+        }
+    }
 
     defaultConfig {
-        applicationId = "com.example.trustmebro"
-        minSdk = 31
+        applicationId = "com.example.cleanerapp"
+        minSdk = 25
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -32,27 +33,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-
-    lint {
-        abortOnError = true
-        checkDependencies = true
-        ignoreWarnings = false
-        quiet = true
-        sarifReport = true
-    }
-}
-
-detekt {
-    toolVersion = libs.versions.detekt.get()
-    config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
-    buildUponDefaultConfig = true
-}
-
-tasks.withType<Detekt>().configureEach {
-    reports {
-        sarif.required.set(true)
-        sarif.outputLocation.set(file("build/reports/detekt.sarif"))
-    }
 }
 
 dependencies {
@@ -60,11 +40,8 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
-    implementation(libs.localbroadcastmanager)
     testImplementation(libs.junit)
-    testImplementation("io.appium:java-client:10.1.1")
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.3.0")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 }

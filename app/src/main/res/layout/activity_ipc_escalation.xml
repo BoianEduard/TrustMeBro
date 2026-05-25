@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#ffffff">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="← Back" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Data Export"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/log_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="11sp"
+            android:textColor="#333333"
+            android:fontFamily="monospace"
+            android:padding="12dp"
+            android:background="#f9f9f9"
+            android:lineSpacingMultiplier="1.4" />
+
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:background="#f5f5f5">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Export Format"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:layout_marginBottom="4dp" />
+
+        <EditText
+            android:id="@+id/format_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="csv, json, or xml"
+            android:padding="8dp"
+            android:background="#ffffff"
+            android:layout_marginBottom="8dp"
+            android:text="csv" />
+
+        <Button
+            android:id="@+id/export_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Export User Database"
+            android:backgroundTint="#d73f3f"
+            android:textColor="#ffffff" />
+
+    </LinearLayout>
+
+</LinearLayout>
