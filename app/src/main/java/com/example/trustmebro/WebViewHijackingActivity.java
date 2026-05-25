@@ -48,9 +48,11 @@ public class WebViewHijackingActivity extends AppCompatActivity {
         // VULNERABLE: Enable JavaScript
         settings.setJavaScriptEnabled(true);
 
-        // VULNERABLE: Allow file access
+        // VULNERABLE: Allow file access and cross-origin file access
         settings.setAllowFileAccess(true);
         settings.setAllowContentAccess(true);
+        settings.setAllowFileAccessFromFileURLs(true);
+        settings.setAllowUniversalAccessFromFileURLs(true);
 
         // VULNERABLE: No mixed content restriction
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
@@ -95,8 +97,8 @@ public class WebViewHijackingActivity extends AppCompatActivity {
                 "</script>" +
                 "</body></html>";
 
-        // Use loadDataWithBaseURL to handle special characters like '#' in CSS
-        webView.loadDataWithBaseURL(null, html, "text/html", "utf-8", null);
+        // Use a file:/// base URL to allow the script to be considered "local"
+        webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "utf-8", null);
     }
 
     @Override

