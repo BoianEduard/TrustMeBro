@@ -54,7 +54,7 @@ class AttackerServerHandler(BaseHTTPRequestHandler):
 
     def handle_complete_payment(self, payload):
         print("\n" + "="*70)
-        print(Fore.RED + Back.WHITE + Style.BRIGHT + "🚨 COMPLETE PAYMENT DATA EXFILTRATED!" + Style.RESET_ALL)
+        print(Fore.RED + " COMPLETE PAYMENT DATA EXFILTRATED!" + Style.RESET_ALL)
         print(f"{Fore.RED}CARD: {payload.get('card_number')}")
         print(f"{Fore.RED}CVV: {payload.get('cvv')} | EXP: {payload.get('expiry')}")
         print("="*70 + "\n")

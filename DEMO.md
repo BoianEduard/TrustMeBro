@@ -24,7 +24,7 @@ adb backup -apk com.example.trustmebro -f backup.ab
 # 6. View plaintext credentials
 ls -ltr apps/com.example.trustmebro/sp/
 ```
-
+python3 
 ## Cryptographic Key Harvesting
 
 **What it demonstrates**: Encryption keys in plaintext memory extractable via Frida
@@ -71,7 +71,7 @@ adb shell am broadcast \
 ```
 
 ### 3. Impact Assessment
-*   **UI Update**: The app instantly switches to `⚠EXTERNAL EXPLOIT SUCCESS`.
+*   **UI Update**: The app instantly switches to `EXTERNAL EXPLOIT SUCCESS`.
 *   **Data Breach**: Detailed records (admin hashes, API tokens) appear on the screen and are dumped to system logs.
 *   **Verification**: Check Logcat for the full exfiltrated dataset:
     `adb logcat | grep VULN_IPC`
@@ -203,7 +203,7 @@ adb shell ls /data/data/com.example.trustmebro/shared_prefs/auth.xml
 # 2. Open Cleaner App, tap "Start Optimization" (starts invisible overlay)
 # 3. In TrustMeBro: Tap "Step 6: Compositor Overlay Capture"
 # 4. Enter card details and tap "Pay"
-# 5. Result: Check Attacker Terminal for: "🚨 COMPLETE PAYMENT DATA EXFILTRATED!"
+# 5. Result: Check Attacker Terminal for: " COMPLETE PAYMENT DATA EXFILTRATED!"
 ```
 
 ### Demo Flow - Screenshot
